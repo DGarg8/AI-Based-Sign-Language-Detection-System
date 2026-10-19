@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video-Based Sign Language Recognition System | B.Tech CSE Project</title>
+    <meta name="description" content="AI Video-Based Sign Language Recognition System using OpenCV, CNN, and Deep Learning for real-time video stream gesture translation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 1. NAVIGATION -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand-group">
+                <a href="#home" class="nav-logo">
+                    <span class="nav-logo-icon">⚡</span> SignVision AI
+                </a>
+                <div class="student-nav-pill">
+                    <span class="student-avatar">D</span>
+                    <span>Diwakar | Roll: <strong>[Roll Number]</strong></span>
+                </div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#recognition">Live Video Recognition</a></li>
+                <li><a href="#how-it-works">Pipeline</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#supported-signs">Signs</a></li>
+                <li><a href="#about">Project Info</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#recognition" class="btn btn-primary btn-sm nav-cta">Start Camera</a>
+                <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-text">
+                <div class="academic-banner">
+                    <span class="academic-tag">B.Tech CSE Project</span>
+                    <span class="academic-info">Developer: <strong>Diwakar</strong> (Roll No: <span class="roll-badge">[Roll Number]</span>)</span>
+                </div>
+                <h1 class="hero-title">
+                    AI Video-Based<br>
+                    <span class="gradient-text">Sign Language</span><br>
+                    Recognition System
+                </h1>
+                <p class="hero-subtitle">⚡ Real-Time Video Stream Gesture Detection & Continuous Translation</p>
+                <p class="hero-description">
+                    An advanced computer vision system processing real-time video feeds and pre-recorded video clips. By analyzing temporal hand gesture sequences and spatial feature maps with Deep CNN models, gestures are translated instantly into readable text.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#recognition" class="btn btn-primary">
+                        <span>▶ Start Live Detection</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-secondary">System Pipeline</a>
+                </div>
+                <div class="hero-metrics">
+                    <div class="metric-item">
+                        <span class="metric-number">30 <span style="font-size:0.8rem; color:var(--secondary-light);">FPS</span></span>
+                        <span class="metric-label">Real-Time Processing</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-number">95.4%</span>
+                        <span class="metric-label">Model Confidence</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-number">CNN+CV</span>
+                        <span class="metric-label">Deep Learning Stack</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Futuristic Visual Card -->
+            <div class="hero-visual">
+                <div class="video-frame-card">
+                    <div class="card-header-bar">
+                        <div class="window-dots">
+                            <span class="dot-red"></span>
+                            <span class="dot-yellow"></span>
+                            <span class="dot-green"></span>
+                        </div>
+                        <div class="stream-status-pill">
+                            <span class="pulse-dot"></span>
+                            <span>LIVE STREAM: FEED_01</span>
+                        </div>
+                    </div>
+                    <div class="card-video-screen">
+                        <div class="scan-line"></div>
+                        <div class="gesture-target-box">
+                            <span class="corner tl"></span>
+                            <span class="corner tr"></span>
+                            <span class="corner bl"></span>
+                            <span class="corner br"></span>
+                            <div class="target-hand">🤟</div>
+                            <span class="target-badge">ROI: HAND DETECTED</span>
+                        </div>
+                    </div>
+                    <div class="card-footer-info">
+                        <div class="detected-label-box">
+                            <span class="detected-title">Predicted Sign</span>
+                            <span class="detected-value">HELLO</span>
+                        </div>
+                        <div class="detected-conf">96.8% MATCH</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. MAIN RECOGNITION SECTION (VIDEO STREAM & VIDEO CLIP) -->
+    <section class="recognition-section" id="recognition">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Live System Feed</span>
+                <h2 class="section-title">Video Sign Recognition Workspace</h2>
+                <p class="section-subtitle">Select between live webcam stream processing or upload a pre-recorded video gesture clip</p>
+            </div>
+
+            <!-- Mode Selector -->
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="webcamModeBtn" data-mode="webcam">
+                    <span>📹 Live Webcam Stream</span>
+                </button>
+                <button class="mode-btn" id="uploadModeBtn" data-mode="upload">
+                    <span>🎬 Upload Video / Clip</span>
+                </button>
+            </div>
+
+            <div class="recognition-workspace">
+                <!-- Mode A: Live Webcam Stream Panel (Primary) -->
+                <div class="recognition-panel" id="webcamPanel">
+                    <div class="input-area">
+                        <div class="webcam-container" id="webcamContainer">
+                            <video id="webcamVideo" autoplay playsinline muted></video>
+                            <canvas id="webcamCanvas" style="display:none;"></canvas>
+                            
+                            <!-- Sci-Fi HUD Overlay on Video -->
+                            <div class="webcam-hud hidden" id="webcamHud">
+                                <div class="hud-top-bar">
+                                    <span class="hud-tag" id="hudFps">30.0 FPS</span>
+                                    <span class="hud-rec-indicator" id="hudRec">STREAMING</span>
+                                    <span class="hud-tag">RES: 640x480</span>
+                                </div>
+                                <div class="hud-target-roi">
+                                    <span class="corner tl"></span>
+                                    <span class="corner tr"></span>
+                                    <span class="corner bl"></span>
+                                    <span class="corner br"></span>
+                                    <span class="roi-guide-text">ALIGN HAND IN FRAME</span>
+                                </div>
+                                <div class="hud-bottom-bar">
+                                    <span>DETECTION: ACTIVE</span>
+                                    <span>FRAME BUFFER: OK</span>
+                                </div>
+                            </div>
+
+                            <!-- Camera Inactive Placeholder -->
+                            <div class="webcam-overlay" id="webcamOverlay">
+                                <div class="webcam-placeholder">
+                                    <div class="webcam-icon">📹</div>
+                                    <h3>Camera Feed Inactive</h3>
+                                    <p>Start your webcam to stream and recognize hand signs in real time.</p>
+                                    <button class="btn btn-primary" id="startWebcamBtn" style="margin-top:16px;">▶ Start Live Video</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Feed Control Buttons -->
+                        <div class="webcam-controls">
+                            <button class="btn btn-primary" id="startWebcamBtnControls" style="display:none;">▶ Resume Feed</button>
+                            <button class="btn btn-secondary" id="captureBtn" disabled>⚡ Recognize Current Frame</button>
+                            <button class="btn btn-danger" id="stopWebcamBtn" disabled>⏹ Stop Camera</button>
+                        </div>
+
+                        <!-- Continuous Real-Time Stream Toggle -->
+                        <div class="continuous-stream-bar">
+                            <div class="continuous-info">
+                                <span class="continuous-info-title">🔄 Continuous Video Recognition</span>
+                                <span class="continuous-info-desc">Automatically analyze video stream every 1.5 seconds without manual capture</span>
+                            </div>
+                            <label class="switch" title="Toggle continuous video stream detection">
+                                <input type="checkbox" id="continuousToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Captured Frame Snapshot Preview (Optional) -->
+                        <div class="preview-container" id="capturePreview" style="display:none;">
+                            <img id="capturedImage" alt="Captured video frame preview">
+                            <div class="preview-actions">
+                                <button class="btn btn-primary" id="recognizeCaptureBtn">🔍 Analyze Snapshot</button>
+                                <button class="btn btn-outline" id="clearCaptureBtn">✕ Clear Frame</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mode B: Video File Upload Panel -->
+                <div class="recognition-panel" id="uploadPanel" style="display:none;">
+                    <div class="input-area">
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-icon">🎬</div>
+                            <h3>Drop sign video clip here or click to browse</h3>
+                            <p>Supports MP4, WEBM, MOV video clips or keyframe images (Max 25MB)</p>
+                            <input type="file" id="imageInput" accept="video/mp4,video/webm,video/quicktime,image/jpeg,image/png" hidden>
+                            <button class="btn btn-primary upload-btn" id="selectFileBtn">Select Video / File</button>
+                        </div>
+
+                        <div class="preview-container" id="uploadPreview" style="display:none;">
+                            <video id="previewVideo" controls style="display:none; width:100%; border-radius:12px;"></video>
+                            <img id="previewImage" alt="Preview" style="display:none;">
+                            <p class="file-name" id="fileName"></p>
+                            <div class="preview-actions">
+                                <button class="btn btn-primary" id="recognizeUploadBtn">🔍 Process Video Sign</button>
+                                <button class="btn btn-outline" id="clearUploadBtn">✕ Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Real-Time Prediction Dashboard -->
+                <div class="result-panel" id="resultPanel">
+                    <div class="result-placeholder" id="resultPlaceholder">
+                        <div class="result-placeholder-icon">⚡</div>
+                        <h3>Awaiting Video Input</h3>
+                        <p>Start the webcam or upload a sign clip to view live CNN predictions and confidence scores.</p>
+                    </div>
+
+                    <div class="result-card" id="resultCard" style="display:none;">
+                        <div class="result-status" id="resultStatus">
+                            <div class="status-left">
+                                <span class="status-dot"></span>
+                                <span class="status-text">Gesture Identified</span>
+                            </div>
+                            <span class="status-time" id="resultTimestamp">Just now</span>
+                        </div>
+
+                        <div class="result-sign-box">
+                            <p class="result-label">Recognized Sign</p>
+                            <h2 class="result-value" id="resultSign">—</h2>
+                        </div>
+
+                        <div class="result-confidence">
+                            <div class="confidence-header">
+                                <span class="result-label" style="margin-bottom:0;">Prediction Confidence</span>
+                                <span class="confidence-value" id="confidenceValue">0%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Live Accumulated Sentence Stream -->
+                        <div class="sentence-output-box">
+                            <div class="sentence-header">
+                                <span>Accumulated Translation</span>
+                                <button id="clearSentenceBtn" style="background:none; color:var(--secondary-light); font-size:0.75rem; cursor:pointer;">Clear</button>
+                            </div>
+                            <div class="sentence-text" id="sentenceText">HELLO...</div>
+                        </div>
+
+                        <button class="btn btn-outline result-try-again" id="tryAgainBtn">↻ Reset Prediction Panel</button>
+                    </div>
+
+                    <div class="result-loading" id="resultLoading" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Analyzing Video Frame Sequence...</p>
+                    </div>
+
+                    <div class="result-error" id="resultError" style="display:none;">
+                        <div class="error-icon">⚠️</div>
+                        <h3 id="errorTitle">Detection Error</h3>
+                        <p id="errorMessage">Could not process video frame.</p>
+                        <button class="btn btn-outline" id="errorRetryBtn">Try Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recognition History Log -->
+            <div class="history-section" id="historySection">
+                <div class="history-header">
+                    <h3><span>📋</span> Video Recognition History Log</h3>
+                    <button class="btn btn-outline btn-sm" id="clearHistoryBtn">Clear History</button>
+                </div>
+                <div class="history-cards" id="historyCards">
+                    <p class="history-empty" id="historyEmpty">No recognition history logged yet. Stream video to detect signs!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. HOW IT WORKS (VIDEO PIPELINE) -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Methodology</span>
+                <h2 class="section-title">Video Recognition Pipeline</h2>
+                <p class="section-subtitle">How our computer vision architecture converts live video gestures into translated text</p>
+            </div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📹</div>
+                    <h3>Video Stream Ingestion</h3>
+                    <p>Live video frames (30 FPS) are captured through the browser media stream or clip upload.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">⚙️</div>
+                    <h3>OpenCV Preprocessing</h3>
+                    <p>Frames undergo background subtraction, color space conversion (RGB to Grayscale/HSV), and hand ROI extraction.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🧠</div>
+                    <h3>Deep CNN Feature Map</h3>
+                    <p>Convolutional layers extract spatial and edge patterns from finger and palm alignments.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">🎯</div>
+                    <h3>Softmax Classification</h3>
+                    <p>Dense layers calculate probability distributions to output the predicted gesture label with confidence.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <div class="step-icon">📝</div>
+                    <h3>Continuous Text Stream</h3>
+                    <p>Recognized signs are rendered on screen and concatenated into continuous readable sentences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. FEATURES SECTION -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Key Capabilities</span>
+                <h2 class="section-title">System Features</h2>
+                <p class="section-subtitle">Engineered specifically for real-time video accessibility and speed</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Video Stream</h3>
+                    <p>Continuous frame extraction and instant inference loop running directly on live camera streams.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Video Clip Upload</h3>
+                    <p>Upload pre-recorded video gestures (MP4/WEBM) for batch frame extraction and testing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>HUD Aiming Overlay</h3>
+                    <p>Interactive camera bounding guidelines assist signers in keeping hand gestures centered in frame.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Live Confidence Meter</h3>
+                    <p>Color-coded animated confidence gauge depicting model certainty for every recognized gesture.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Sentence Accumulator</h3>
+                    <p>Streams sequentially detected signs together into a continuous translated sentence.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Persistent Session History</h3>
+                    <p>Automatic client-side logging storing all recognized signs with timestamps using localStorage.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. SUPPORTED SIGNS SECTION -->
+    <section class="supported-signs" id="supported-signs">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Dataset Vocab</span>
+                <h2 class="section-title">Recognized Gesture Classes</h2>
+                <p class="section-subtitle">Configurable gesture dictionary trained on the CNN deep learning dataset</p>
+            </div>
+            <div class="signs-grid">
+                <div class="sign-card">
+                    <div class="sign-visual">👋 HELLO</div>
+                    <p class="sign-description">Open palm wave gesture</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">🙏 THANK YOU</div>
+                    <p class="sign-description">Flat hand moving forward from chin</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">👍 YES</div>
+                    <p class="sign-description">Fist with upright thumb</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">👎 NO</div>
+                    <p class="sign-description">Thumb down or index finger shake</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">🤲 PLEASE</div>
+                    <p class="sign-description">Open palm circular movement</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">🆘 HELP</div>
+                    <p class="sign-description">Fist pressed on flat palm, lifting</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">👌 GOOD</div>
+                    <p class="sign-description">Thumb & index tip contact (OK sign)</p>
+                </div>
+                <div class="sign-card">
+                    <div class="sign-visual">✋ STOP / BAD</div>
+                    <p class="sign-description">Vertical open palm pushing forward</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. ABOUT THE PROJECT & STUDENT CREDENTIALS -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <span class="section-badge">Project Profile</span>
+                    <h2 class="section-title">About The Project</h2>
+                    <p>
+                        The <strong>AI Video-Based Sign Language Recognition System</strong> is developed as a final year <strong>B.Tech Computer Science & Engineering (CSE)</strong> academic project. 
+                    </p>
+                    <p>
+                        The application bridges the communication divide between the deaf and hard-of-hearing community and non-signers. By combining high-framerate video processing via <strong>OpenCV</strong> and deep feature classification using <strong>Convolutional Neural Networks (CNN)</strong>, the project allows users to sign naturally in front of any camera and receive instant readable feedback.
+                    </p>
+                    <div class="note-box">
+                        <strong>Academic Project Scope:</strong> Engineered for real-time video stream gesture detection. The model architecture uses frame-by-frame convolutional feature extraction with temporal buffering for continuous output.
+                    </div>
+                </div>
+
+                <!-- Student Credentials Box -->
+                <div class="project-credentials-card">
+                    <div class="cred-header">
+                        <span class="cred-icon">🎓</span>
+                        <div>
+                            <h3>Academic Submission</h3>
+                            <p>Bachelor of Technology — CSE</p>
+                        </div>
+                    </div>
+                    <div class="student-info-list">
+                        <div class="info-row">
+                            <span class="info-label">Student Name:</span>
+                            <span class="info-val">Diwakar</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Roll Number:</span>
+                            <span class="info-val highlight">[Roll Number]</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Branch & Degree:</span>
+                            <span class="info-val">B.Tech Computer Science & Engineering</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Project Domain:</span>
+                            <span class="info-val">Computer Vision & Deep Learning</span>
+                        </div>
+                    </div>
+
+                    <div class="about-stats-grid">
+                        <div class="stat-card">
+                            <h3>CNN</h3>
+                            <p>Deep Learning</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>OpenCV</h3>
+                            <p>Video Analysis</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Flask</h3>
+                            <p>REST API</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. TECHNOLOGY STACK -->
+    <section class="tech-stack" id="tech-stack">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Architecture</span>
+                <h2 class="section-title">Technology Stack</h2>
+                <p class="section-subtitle">Core frameworks and tools powering the video recognition system</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🌐</div>
+                    <h3>Frontend</h3>
+                    <p>HTML5, Modern CSS3 (Glassmorphism), Vanilla ES6+ JavaScript</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🐍</div>
+                    <h3>Backend API</h3>
+                    <p>Python 3.x, Flask, Flask-CORS REST Architecture</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">👁️</div>
+                    <h3>Computer Vision</h3>
+                    <p>OpenCV (cv2) Video Frame Processing & ROI Segmentation</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🧠</div>
+                    <h3>Deep Learning</h3>
+                    <p>TensorFlow / Keras Convolutional Neural Networks (CNN)</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📊</div>
+                    <h3>Data Processing</h3>
+                    <p>NumPy Array Operations, Pandas Dataset Pipeline</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. PROJECT ARCHITECTURE FLOW -->
+    <section class="architecture" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Dataflow</span>
+                <h2 class="section-title">Video Stream Architecture</h2>
+                <p class="section-subtitle">End-to-end dataflow from camera sensors to translated text</p>
+            </div>
+            <div class="architecture-diagram">
+                <div class="arch-node"><span>👤</span> User Performing Gesture</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>📹</span> Live Video Stream / Recorded Clip (30 FPS)</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>🌐</span> Frontend Client (Frame Sampling & HUD Overlay)</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>🐍</span> Flask REST API Server (/predict endpoint)</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>👁️</span> OpenCV Video Preprocessing (ROI Bounding & Normalization)</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>🧠</span> Trained CNN Deep Learning Model (TensorFlow/Keras)</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>🎯</span> Softmax Sign Classification & Probability Score</div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-node"><span>📱</span> Real-Time UI HUD & Live Sentence Output</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>⚡ SignVision AI</h3>
+                    <p>AI Video-Based Sign Language Recognition System</p>
+                    <div class="footer-student-meta">
+                        Developed by: <strong>Diwakar</strong> | Roll No: <span class="roll-tag">[Roll Number]</span><br>
+                        B.Tech Computer Science and Engineering Academic Project
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#recognition">Live Recognition</a></li>
+                        <li><a href="#how-it-works">Video Pipeline</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About Project</a></li>
+                    </ul>
+                </div>
+                <div class="footer-info">
+                    <h4>Project Info</h4>
+                    <p><strong>Stack:</strong> CNN, OpenCV, Flask, Vanilla JS</p>
+                    <p><strong>Modality:</strong> Continuous Video Feed & Clip Upload</p>
+                    <p><strong>Affiliation:</strong> Department of CSE</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 AI Video-Based Sign Language Recognition System. Developed by Diwakar ([Roll Number]).</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
